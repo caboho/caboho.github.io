@@ -64,6 +64,8 @@ h1{margin:0;font-weight:500;font-size:var(--s-xl);line-height:1.1;letter-spacing
 .route-head{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
 .flags{display:inline-flex;align-items:center;gap:10px;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:1rem;line-height:1}
 .flags img{display:block;width:20px;height:20px}
+.btn .ext{flex:none;margin-left:-2px;opacity:.7}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .legal{font-size:var(--s-sm);color:var(--muted);margin:.4rem 0 0}
 .route{border-top:1px solid var(--rule);padding-top:1.25rem;display:flex;flex-direction:column;gap:.6rem}
 .stops{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;margin:0;padding:0;list-style:none;font-family:var(--f-display);font-size:var(--s-sm);color:var(--muted)}
@@ -97,8 +99,9 @@ h1{margin:0;font-weight:500;font-size:var(--s-xl);line-height:1.1;letter-spacing
   <p class="ask">What are you listening to these days? Let’s start there. Contact me: <span class="mailwrap"><a id="addr" class="mail" href="mailto:carlosbohorquez@gmail.com">carlosbohorquez@gmail.com</a><button class="copy" id="copy" type="button" aria-label="Copy email address" data-tip="Copy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></span></p>
 
   <div class="actions">
-    <a class="btn primary" href="carlos.vcf">Add contact</a>
-    <a class="btn" href="https://www.linkedin.com/in/carlosbohorquez/" rel="noopener">LinkedIn</a>
+    <a class="btn primary" href="carlos.vcf">Add my contact</a>
+    <a class="btn" href="https://www.linkedin.com/in/carlosbohorquez/" target="_blank" rel="noopener">LinkedIn<svg class="ext" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5h5v5"/><path d="M9.5 2.5 3 9"/></svg><span class="sr">(opens in a new tab)</span></a>
+    <a class="btn" href="https://music.apple.com/us/playlist/jazz/pl.u-PlVuk7Er5j" target="_blank" rel="noopener">Jazz 🎹<svg class="ext" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 2.5h5v5"/><path d="M9.5 2.5 3 9"/></svg><span class="sr">(opens in a new tab)</span></a>
   </div>
 
   <footer class="route">
