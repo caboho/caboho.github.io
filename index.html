@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carlos Bohorquez</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Carlos Bohorquez. I build products that people inside big organizations choose to use.">
+<meta property="og:title" content="Carlos Bohorquez">
+<meta property="og:description" content="I build products that people inside big organizations choose to use.">
+<meta property="og:url" content="https://caboho.github.io">
+<meta property="og:type" content="profile">
+<meta property="og:image" content="https://caboho.github.io/photo.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232340A8'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='30' fill='%23fff' text-anchor='middle'%3ECB%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap">
+<style>
+/* Layout: one left-aligned column, a business card you read top to bottom in ten seconds; the route strip is the one signature detail */
+:root{
+  --paper:#F4F5F1; --ink:#16201D; --muted:#58625E; --rule:#D8DCD5; --accent:#2340A8; --accent-ink:#FFFFFF; --chip:#E7EAE3;
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-voice:"Newsreader",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0F1416;--ink:#E7ECE9;--muted:#9AA5A0;--rule:#28312F;--accent:#93A9FF;--accent-ink:#0F1416;--chip:#1A2124;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#0F1416;--ink:#E7ECE9;--muted:#9AA5A0;--rule:#28312F;--accent:#93A9FF;--accent-ink:#0F1416;--chip:#1A2124;color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-display);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+main{max-width:38rem;margin:0 auto;padding-block:clamp(2.5rem,9vh,6rem) 3rem;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:2rem}
+.who{display:flex;align-items:center;gap:16px}
+.mono{width:88px;height:88px;border-radius:50%;flex:none;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--f-voice);font-size:26px;letter-spacing:.02em;overflow:hidden}
+.mono img{width:100%;height:100%;object-fit:cover;display:block}
+h1{margin:0;font-weight:500;font-size:clamp(1.75rem,6vw,2.25rem);line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
+.role{margin:.25rem 0 0;color:var(--muted);font-size:.95rem}
+.hook{margin:0;font-family:var(--f-voice);font-weight:400;font-size:clamp(1.6rem,5.6vw,2.15rem);line-height:1.22;letter-spacing:-.005em;text-wrap:balance}
+.story{margin:0;padding-left:1rem;border-left:2px solid var(--rule);border-radius:0;font-family:var(--f-voice);font-style:italic;font-size:1.1rem;line-height:1.5;color:var(--ink);max-width:34rem}
+.facts{display:grid;gap:.6rem;margin:0;padding:0;list-style:none}
+.facts li{display:grid;grid-template-columns:6.5rem minmax(0,1fr);gap:12px;align-items:baseline}
+.k{font-family:var(--f-display);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.v{min-width:0}
+.ask{margin:0;font-family:var(--f-voice);font-size:1.25rem}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--ink);color:var(--ink);text-decoration:none;font-size:.95rem;font-weight:500;background:transparent;font-family:var(--f-display);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:hover{background:var(--chip)}
+.btn.primary:hover{filter:brightness(1.08);background:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.email{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin-top:-1.4rem}
+.email a{font-family:var(--f-voice);font-size:1.25rem;font-weight:600;color:var(--ink);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px;overflow-wrap:anywhere;min-width:0}
+.email a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.copy{border:0;background:none;color:var(--accent);font-family:var(--f-display);font-size:.85rem;cursor:pointer;padding:4px 2px;text-decoration:underline;text-underline-offset:3px}
+.route{border-top:1px solid var(--rule);padding-top:1.25rem;display:flex;flex-direction:column;gap:.6rem}
+.stops{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;margin:0;padding:0;list-style:none;font-family:var(--f-display);font-size:.78rem;color:var(--muted)}
+.stops li{display:flex;align-items:center}
+.stops li+li::before{content:"";width:14px;height:1px;background:var(--rule);margin:0 6px}
+.stops .next{color:var(--accent)}
+.langs{font-family:var(--f-display);font-size:.78rem;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.hook,.story{animation:rise .5s ease-out both}.story{animation-delay:.08s}@keyframes rise{from{transform:translateY(6px)}to{transform:none}}}
+@media (max-width:420px){.facts li{grid-template-columns:1fr;gap:2px}}
+</style>
+</head>
+<body>
+<main>
+  <header class="who">
+    <div class="mono"><img src="photo.jpg" alt="Carlos Bohorquez" width="88" height="88"></div>
+    <div>
+      <h1>Carlos Bohorquez</h1>
+      <p class="role">Product leader</p>
+    </div>
+  </header>
+
+  <p class="hook">I build products that people inside big organizations choose to use.</p>
+
+  <p class="story">On a sabbatical year in Europe.</p>
+
+  <ul class="facts">
+    <li><span class="k">Built at</span><span class="v">McKinsey, Microsoft, Easy Taxi (Tappsi), Siemens</span></li>
+    <li><span class="k">Trained as</span><span class="v">Electronics engineer · HBS MBA · Guitar player</span></li>
+    <li><span class="k">Languages</span><span class="v">English · Español · Deutsch</span></li>
+  </ul>
+
+  <p class="ask">What are you working on?</p>
+
+  <div class="email"><a id="addr" href="mailto:carlosbohorquez@gmail.com">carlosbohorquez@gmail.com</a><button class="copy" id="copy" type="button">Copy</button></div>
+
+  <div class="actions">
+    <a class="btn primary" href="carlos.vcf">Save my contact</a>
+    <a class="btn" href="https://www.linkedin.com/in/carlosbohorquez/" rel="noopener">LinkedIn</a>
+  </div>
+
+  <footer class="route">
+    <span class="k">Lived and worked in</span>
+    <ol class="stops">
+      <li>Porlamar</li><li>Bogotá</li><li>Nürnberg</li><li>Lima</li><li>Boston</li><li>Seattle</li><li>San Francisco</li><li>New York</li><li class="next">Madrid, 2027</li>
+    </ol>
+  </footer>
+</main>
+<script>
+(function(){
+  var b=document.getElementById('copy'),a=document.getElementById('addr');
+  b.addEventListener('click',function(){
+    var t=a.textContent;
+    function done(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1600)}
+    function sel(){var r=document.createRange();r.selectNodeContents(a);var s=getSelection();s.removeAllRanges();s.addRange(r)}
+    try{navigator.clipboard.writeText(t).then(done,sel)}catch(e){sel()}
+  });
+})();
+</script>
+</body>
+</html>
