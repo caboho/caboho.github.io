@@ -57,8 +57,8 @@ h1{margin:0;font-weight:500;font-size:clamp(1.75rem,6vw,2.25rem);line-height:1.1
 .copy::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);font-family:var(--f-display);font-size:.72rem;line-height:1.3;padding:3px 8px;border-radius:5px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s}
 .copy:hover::after,.copy:focus-visible::after,.copy.ok::after{opacity:1}
 .route-head{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
-.flags{display:inline-flex;align-items:center;gap:10px}
-.flags img{display:block;width:16px;height:12px;border-radius:2px;box-shadow:0 0 0 1px var(--rule)}
+.flags{display:inline-flex;align-items:center;gap:10px;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:1rem;line-height:1}
+.flags img{display:block;width:20px;height:20px}
 .legal{font-size:.75rem;color:var(--muted);margin:.4rem 0 0}
 .route{border-top:1px solid var(--rule);padding-top:1.25rem;display:flex;flex-direction:column;gap:.6rem}
 .stops{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;margin:0;padding:0;list-style:none;font-family:var(--f-display);font-size:.78rem;color:var(--muted)}
@@ -100,7 +100,7 @@ h1{margin:0;font-weight:500;font-size:clamp(1.75rem,6vw,2.25rem);line-height:1.1
   </div>
 
   <footer class="route">
-    <div class="route-head"><span class="k">Lived and worked in</span><span class="flags"><img src="flags/ve.svg" alt="Venezuela" title="Venezuela" width="16" height="12"><img src="flags/co.svg" alt="Colombia" title="Colombia" width="16" height="12"><img src="flags/de.svg" alt="Germany" title="Germany" width="16" height="12"><img src="flags/pe.svg" alt="Peru" title="Peru" width="16" height="12"><img src="flags/us.svg" alt="United States" title="United States" width="16" height="12"></span></div>
+    <div class="route-head"><span class="k">Lived and worked in</span><span class="flags"><span class="fl" role="img" aria-label="Venezuela" title="Venezuela" data-src="flags/ve.svg">🇻🇪</span><span class="fl" role="img" aria-label="Colombia" title="Colombia" data-src="flags/co.svg">🇨🇴</span><span class="fl" role="img" aria-label="Germany" title="Germany" data-src="flags/de.svg">🇩🇪</span><span class="fl" role="img" aria-label="Peru" title="Peru" data-src="flags/pe.svg">🇵🇪</span><span class="fl" role="img" aria-label="United States" title="United States" data-src="flags/us.svg">🇺🇸</span></span></div>
     <ol class="stops">
       <li>Porlamar</li><li>Bogotá</li><li>Nürnberg</li><li>Lima</li><li>Boston</li><li>Seattle</li><li>San Francisco</li><li>New York</li><li class="next">Madrid, 2027</li>
     </ol>
@@ -108,6 +108,17 @@ h1{margin:0;font-weight:500;font-size:clamp(1.75rem,6vw,2.25rem);line-height:1.1
   </footer>
 </main>
 <script>
+(function(){
+  try{
+    var c=document.createElement('canvas');c.width=c.height=1;
+    var x=c.getContext('2d',{willReadFrequently:true});x.textBaseline='top';x.font='100px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';x.scale(.01,.01);
+    function px(t,col){x.clearRect(0,0,100,100);x.fillStyle=col;x.fillText(t,0,0);return x.getImageData(0,0,1,1).data.join(',')}
+    function color(t){var w=px(t,'#fff'),k=px(t,'#000');return w===k&&w.indexOf('0,0,0,')!==0}
+    if(color('\uD83C\uDDE8\uD83C\uDDED'))return;
+  }catch(e){}
+  var f=document.querySelectorAll('.fl[data-src]');
+  for(var i=0;i<f.length;i++){var m=new Image();m.src=f[i].getAttribute('data-src');m.alt='';m.width=20;m.height=20;f[i].textContent='';f[i].appendChild(m)}
+})();
 (function(){
   var b=document.getElementById('copy'),a=document.getElementById('addr');
   b.addEventListener('click',function(){
