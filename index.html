@@ -47,10 +47,10 @@ h1{margin:0;font-weight:500;font-size:var(--s-xl);line-height:1.1;letter-spacing
 .btn:hover{background:var(--chip)}
 .btn.primary:hover{filter:brightness(1.08);background:var(--accent)}
 .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.email{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin-top:-1.4rem}
-.email a{font-size:var(--s-md);font-weight:500;color:var(--ink);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px;overflow-wrap:anywhere;min-width:0}
-.email a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.copy{border:0;background:none;color:var(--muted);cursor:pointer;padding:6px;margin:-6px 0;display:inline-flex;align-items:center;align-self:center;border-radius:6px}
+.mailwrap{white-space:nowrap}
+.mail{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.mail:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.copy{border:0;background:none;color:var(--muted);cursor:pointer;padding:6px;margin:-6px 0 -6px 4px;display:inline-flex;align-items:center;vertical-align:middle;border-radius:6px}
 .copy:hover{color:var(--ink);background:var(--chip)}
 .copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .copy.ok{color:var(--accent)}
@@ -90,9 +90,7 @@ h1{margin:0;font-weight:500;font-size:var(--s-xl);line-height:1.1;letter-spacing
     <li><span class="k">Languages</span><span class="v">English · Español · Deutsch</span></li>
   </ul>
 
-  <p class="ask">What are you listening to these days? Let’s start there.</p>
-
-  <div class="email"><a id="addr" href="mailto:carlosbohorquez@gmail.com">carlosbohorquez@gmail.com</a><button class="copy" id="copy" type="button" aria-label="Copy email address" data-tip="Copy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></div>
+  <p class="ask">What are you listening to these days? Let’s start there. Contact me: <span class="mailwrap"><a id="addr" class="mail" href="mailto:carlosbohorquez@gmail.com">carlosbohorquez@gmail.com</a><button class="copy" id="copy" type="button" aria-label="Copy email address" data-tip="Copy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></span></p>
 
   <div class="actions">
     <a class="btn primary" href="carlos.vcf">Add to contacts</a>
