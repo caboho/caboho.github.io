@@ -57,7 +57,8 @@ h1{margin:0;font-weight:500;font-size:clamp(1.75rem,6vw,2.25rem);line-height:1.1
 .copy::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);font-family:var(--f-display);font-size:.72rem;line-height:1.3;padding:3px 8px;border-radius:5px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s}
 .copy:hover::after,.copy:focus-visible::after,.copy.ok::after{opacity:1}
 .route-head{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
-.flags{font-size:.95rem;line-height:1;letter-spacing:.12em}
+.flags{display:inline-flex;align-items:center;gap:5px}
+.flags img{display:block;width:16px;height:12px;border-radius:2px;box-shadow:0 0 0 1px var(--rule)}
 .legal{font-size:.75rem;color:var(--muted);margin:.4rem 0 0}
 .route{border-top:1px solid var(--rule);padding-top:1.25rem;display:flex;flex-direction:column;gap:.6rem}
 .stops{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;margin:0;padding:0;list-style:none;font-family:var(--f-display);font-size:.78rem;color:var(--muted)}
@@ -99,7 +100,7 @@ h1{margin:0;font-weight:500;font-size:clamp(1.75rem,6vw,2.25rem);line-height:1.1
   </div>
 
   <footer class="route">
-    <div class="route-head"><span class="k">Lived and worked in</span><span class="flags" role="img" aria-label="Venezuela, Colombia, Germany, Peru, United States">🇻🇪 🇨🇴 🇩🇪 🇵🇪 🇺🇸</span></div>
+    <div class="route-head"><span class="k">Lived and worked in</span><span class="flags"><img src="flags/ve.svg" alt="Venezuela" title="Venezuela" width="16" height="12"><img src="flags/co.svg" alt="Colombia" title="Colombia" width="16" height="12"><img src="flags/de.svg" alt="Germany" title="Germany" width="16" height="12"><img src="flags/pe.svg" alt="Peru" title="Peru" width="16" height="12"><img src="flags/us.svg" alt="United States" title="United States" width="16" height="12"></span></div>
     <ol class="stops">
       <li>Porlamar</li><li>Bogotá</li><li>Nürnberg</li><li>Lima</li><li>Boston</li><li>Seattle</li><li>San Francisco</li><li>New York</li><li class="next">Madrid, 2027</li>
     </ol>
