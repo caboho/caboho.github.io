@@ -53,6 +53,9 @@ h1{margin:0;font-weight:500;font-size:clamp(1.75rem,6vw,2.25rem);line-height:1.1
 .copy:hover{color:var(--ink);background:var(--chip)}
 .copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .copy.ok{color:var(--accent)}
+.copy{position:relative}
+.copy::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);font-family:var(--f-display);font-size:.72rem;line-height:1.3;padding:3px 8px;border-radius:5px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s}
+.copy:hover::after,.copy:focus-visible::after,.copy.ok::after{opacity:1}
 .legal{font-size:.75rem;color:var(--muted);margin:.4rem 0 0}
 .route{border-top:1px solid var(--rule);padding-top:1.25rem;display:flex;flex-direction:column;gap:.6rem}
 .stops{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;margin:0;padding:0;list-style:none;font-family:var(--f-display);font-size:.78rem;color:var(--muted)}
@@ -86,7 +89,7 @@ h1{margin:0;font-weight:500;font-size:clamp(1.75rem,6vw,2.25rem);line-height:1.1
 
   <p class="ask">What are you working on?</p>
 
-  <div class="email"><a id="addr" href="mailto:carlosbohorquez@gmail.com">carlosbohorquez@gmail.com</a><button class="copy" id="copy" type="button" aria-label="Copy email address" title="Copy email address"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></div>
+  <div class="email"><a id="addr" href="mailto:carlosbohorquez@gmail.com">carlosbohorquez@gmail.com</a><button class="copy" id="copy" type="button" aria-label="Copy email address" data-tip="Copy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></div>
 
   <div class="actions">
     <a class="btn primary" href="carlos.vcf">Save my contact</a>
@@ -106,7 +109,7 @@ h1{margin:0;font-weight:500;font-size:clamp(1.75rem,6vw,2.25rem);line-height:1.1
   var b=document.getElementById('copy'),a=document.getElementById('addr');
   b.addEventListener('click',function(){
     var t=a.textContent;
-    var ic=b.innerHTML,ck='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';function done(){b.innerHTML=ck;b.classList.add('ok');b.setAttribute('aria-label','Copied');setTimeout(function(){b.innerHTML=ic;b.classList.remove('ok');b.setAttribute('aria-label','Copy email address')},1600)}
+    var ic=b.innerHTML,ck='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';function done(){b.innerHTML=ck;b.classList.add('ok');b.setAttribute('aria-label','Copied');b.dataset.tip='Copied';setTimeout(function(){b.innerHTML=ic;b.classList.remove('ok');b.setAttribute('aria-label','Copy email address');b.dataset.tip='Copy'},1600)}
     function sel(){var r=document.createRange();r.selectNodeContents(a);var s=getSelection();s.removeAllRanges();s.addRange(r)}
     try{navigator.clipboard.writeText(t).then(done,sel)}catch(e){sel()}
   });
