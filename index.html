@@ -6,9 +6,9 @@
 <title>Carlos Bohórquez</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Carlos Bohórquez. Always fascinated by how people think, decide and build together.">
+<meta name="description" content="Carlos Bohórquez. Exploring how people think, decide and build together.">
 <meta property="og:title" content="Carlos Bohórquez">
-<meta property="og:description" content="Always fascinated by how people think, decide and build together.">
+<meta property="og:description" content="Exploring how people think, decide and build together.">
 <meta property="og:url" content="https://caboho.co">
 <meta property="og:type" content="profile">
 <meta property="og:image" content="https://caboho.co/photo.jpg">
@@ -35,8 +35,8 @@ main{max-width:38rem;margin:0 auto;padding-block:clamp(2.5rem,9vh,6rem) 3rem;pad
 .mono img{width:100%;height:100%;object-fit:cover;display:block}
 h1{margin:0;font-weight:500;font-size:var(--s-xl);line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
 .role{margin:.25rem 0 0;color:var(--muted);font-size:var(--s-md)}
+.nw{white-space:nowrap}
 .hook{margin:0;font-family:var(--f-voice);font-weight:400;font-size:var(--s-xl);line-height:1.22;letter-spacing:-.005em;text-wrap:balance}
-.story{margin:0;padding-left:1rem;border-left:2px solid var(--rule);border-radius:0;font-family:var(--f-voice);font-size:min(var(--s-md),3.8vw);white-space:nowrap;line-height:1.5;color:var(--ink);max-width:34rem}
 .facts{display:grid;gap:.6rem;margin:0;padding:0;list-style:none}
 .facts li{display:grid;grid-template-columns:6.5rem minmax(0,1fr);gap:12px;align-items:baseline}
 .k{font-family:var(--f-display);font-size:var(--s-sm);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
@@ -85,8 +85,9 @@ h1{margin:0;font-weight:500;font-size:var(--s-xl);line-height:1.1;letter-spacing
 .stops li{display:flex;align-items:center}
 .stops li:not(:last-child)::after{content:"";width:14px;height:1px;background:var(--rule);margin:0 6px}
 .stops .next{color:var(--accent)}
-@media (prefers-reduced-motion:no-preference){.hook,.story{animation:rise .5s ease-out both}.story{animation-delay:.08s}@keyframes rise{from{transform:translateY(6px)}to{transform:none}}}
-@media (max-width:420px){.facts li{grid-template-columns:1fr;gap:2px}}
+@media (prefers-reduced-motion:no-preference){.hook{animation:rise .5s ease-out both}@keyframes rise{from{transform:translateY(6px)}to{transform:none}}}
+@media (max-width:420px){.facts li{grid-template-columns:1fr;gap:2px}.who{gap:12px}.mono{width:72px;height:72px}.name-row{gap:4px}}
+@media (max-width:370px){h1{font-size:1.45rem}.role .nw{white-space:normal}}
 </style>
 </head>
 <body>
@@ -95,13 +96,11 @@ h1{margin:0;font-weight:500;font-size:var(--s-xl);line-height:1.1;letter-spacing
     <div class="mono"><img src="photo.jpg" alt="Carlos Bohórquez" width="88" height="88"></div>
     <div>
       <div class="name-row"><h1>Carlos Bohórquez</h1><button class="qr-btn" id="qr-open" type="button" aria-label="Show QR code" aria-haspopup="dialog"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="1.75" y="1.75" width="4.5" height="4.5" rx=".8"/><rect x="9.75" y="1.75" width="4.5" height="4.5" rx=".8"/><rect x="1.75" y="9.75" width="4.5" height="4.5" rx=".8"/><path d="M9.75 9.75h1.5v1.5M14.25 9.75v4.5h-3M9.75 13.5v.75"/></svg></button></div>
-      <p class="role">Product leader</p>
+      <p class="role"><span class="nw">Product leader · 🗽 NYC,</span> <span class="nw">often found in Europe and Bogotá.</span></p>
     </div>
   </header>
 
-  <p class="hook">Always fascinated by how people think, decide and build together.</p>
-
-  <p class="story">Based in New York. Found in Europe and Bogotá.</p>
+  <p class="hook">Exploring how people think, decide and build together.</p>
 
   <ul class="facts">
     <li><span class="k">Previously at</span><span class="v">McKinsey, Microsoft, Easy Taxi (Tappsi), Siemens</span></li>
