@@ -1,7 +1,7 @@
 // Offline cache for Flow Focus Chain.
 // Pages: network first (so updates show up), cached copy when offline.
 // Built files have content hashes in their names, so cache first is safe for them.
-const CACHE = 'ffc-v2';
+const CACHE = 'ffc-v3';
 const SHELL = './index.html';
 
 self.addEventListener('install', (event) => {
@@ -22,7 +22,8 @@ self.addEventListener('fetch', (event) => {
 
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
+      // no-cache: always ask the server whether the page changed, so a new version shows on the next open
+      fetch(req, { cache: 'no-cache' })
         .then((res) => {
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put(SHELL, copy));
