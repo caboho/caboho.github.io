@@ -22,25 +22,31 @@
 <body>
 <h1>Sound test</h1>
 <p class="muted">Focus Flow test page (FF-84). It only plays the chime; it saves nothing.</p>
+<p><b>Reload this page before each test.</b> For each button, note two things: did you hear the chime, and did the music keep playing?</p>
 <ol>
-  <li>Turn the phone's <b>silent switch on</b> and set the volume to about half.</li>
-  <li>Tap <b>A</b>, then <b>B</b>, then <b>C</b>.</li>
-  <li>Tell Claude which ones you heard, with a screenshot of the grey box at the end.</li>
+  <li><b>Test 1, music:</b> silent switch off, a song playing in Apple Music. Tap A, D, B, C.</li>
+  <li><b>Test 2, silent:</b> no music, silent switch on. Tap A, then D.</li>
+  <li>Send Claude what happened, with a screenshot of the grey box at the end.</li>
 </ol>
 
 <div class="card">
   <h2>A · The chime as it is today</h2>
-  <div class="muted">Expected: silent while the silent switch is on.</div>
+  <div class="muted">No media setting.</div>
   <button id="a">Play A</button>
 </div>
 <div class="card">
-  <h2>B · The chime marked as media</h2>
-  <div class="muted">Same sound, after telling the browser it is media.</div>
+  <h2>D · Marked as a short sound</h2>
+  <div class="muted">The gentler setting, meant for brief sounds over music.</div>
+  <button id="d">Play D</button>
+</div>
+<div class="card">
+  <h2>B · Marked as media</h2>
+  <div class="muted">The setting from the first test. Now also asks to resume if interrupted.</div>
   <button id="b">Play B</button>
 </div>
 <div class="card">
   <h2>C · The chime as a sound file</h2>
-  <div class="muted">Same notes, played the way a song or video plays.</div>
+  <div class="muted">Stopped the music in the first test.</div>
   <button id="c">Play C</button>
 </div>
 <div class="card">
@@ -64,17 +70,22 @@
 
   // The app's chime: two short soft sine tones (880 Hz, then 1175 Hz).
   var ctx = null;
-  function tones() {
-    var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return 'no tone generator';
-    ctx = ctx || new AC(); if (ctx.state === 'suspended') ctx.resume();
+  function schedule() {
     var t = ctx.currentTime;
     [880, 1175].forEach(function (f, i) {
       var o = ctx.createOscillator(), g = ctx.createGain(), st = t + i * 0.22;
       o.type = 'sine'; o.frequency.value = f;
-      g.gain.setValueAtTime(0.0001, st); g.gain.exponentialRampToValueAtTime(0.35, st + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, st + 0.6);
-      o.connect(g).connect(ctx.destination); o.start(st); o.stop(st + 0.65);
+      g.gain.setValueAtTime(0.0001, st); g.gain.exponentialRampToValueAtTime(0.32, st + 0.02); g.gain.setTargetAtTime(0.0001, st + 0.02, 0.11);
+      o.connect(g).connect(ctx.destination); o.start(st); o.stop(st + 0.7);
     });
-    return 'played (' + ctx.state + ')';
+  }
+  function tones(label) {
+    var AC = window.AudioContext || window.webkitAudioContext; if (!AC) { show(label + 'no tone generator'); return; }
+    ctx = ctx || new AC(); var before = ctx.state;
+    if (before === 'running') { schedule(); show(label + 'played (running)'); return; }
+    var done = false, finish = function (how) { if (done) return; done = true; if (ctx.state === 'running') schedule(); show(label + 'was ' + before + ', ' + how + ', now ' + ctx.state); };
+    try { ctx.resume().then(function () { finish('resumed'); }, function (e) { finish('resume refused: ' + e.name); }); } catch (e) { finish('resume error'); }
+    setTimeout(function () { finish('no answer after 1.5 s'); }, 1500);
   }
 
   // The same two tones rendered into a small WAV file.
@@ -98,8 +109,9 @@
   }
   var url = null;
 
-  document.getElementById('a').onclick = function () { setType('auto'); show('A ' + tones()); };
-  document.getElementById('b').onclick = function () { var ok = setType('playback'); show('B ' + (ok ? 'media on, ' : 'media setting refused, ') + tones()); };
+  document.getElementById('a').onclick = function () { setType('auto'); tones('A '); };
+  document.getElementById('d').onclick = function () { var ok = setType('transient'); tones('D ' + (ok ? 'short-sound on, ' : 'setting refused, ')); };
+  document.getElementById('b').onclick = function () { var ok = setType('playback'); tones('B ' + (ok ? 'media on, ' : 'setting refused, ')); };
   document.getElementById('c').onclick = function () {
     setType('auto'); url = url || wavUrl();
     var el = new Audio(url);
