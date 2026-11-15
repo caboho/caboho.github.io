@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Focus Flow · Sound test</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 17px/1.45 -apple-system, system-ui, sans-serif; margin: 0; padding: 24px 18px 48px; max-width: 520px; margin-inline: auto; background: #fafafa; color: #171717; }
+  @media (prefers-color-scheme: dark) { body { background: #0a0a0a; color: #f5f5f5; } .card { background: #171717 !important; border-color: #2a2a2a !important; } .muted { color: #a3a3a3 !important; } }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .muted { color: #666; font-size: 15px; }
+  ol { padding-left: 22px; }
+  .card { background: #fff; border: 1px solid #e5e5e5; border-radius: 18px; padding: 16px; margin: 14px 0; }
+  .card h2 { font-size: 17px; margin: 0 0 4px; }
+  button { font: inherit; font-weight: 600; width: 100%; min-height: 52px; border: 0; border-radius: 14px; background: #2563eb; color: #fff; margin-top: 10px; }
+  button:active { opacity: .7; }
+  #info { font-size: 14px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<h1>Sound test</h1>
+<p class="muted">Focus Flow test page (FF-84). It only plays the chime; it saves nothing.</p>
+<ol>
+  <li>Turn the phone's <b>silent switch on</b> and set the volume to about half.</li>
+  <li>Tap <b>A</b>, then <b>B</b>, then <b>C</b>.</li>
+  <li>Tell Claude which ones you heard, with a screenshot of the grey box at the end.</li>
+</ol>
+
+<div class="card">
+  <h2>A · The chime as it is today</h2>
+  <div class="muted">Expected: silent while the silent switch is on.</div>
+  <button id="a">Play A</button>
+</div>
+<div class="card">
+  <h2>B · The chime marked as media</h2>
+  <div class="muted">Same sound, after telling the browser it is media.</div>
+  <button id="b">Play B</button>
+</div>
+<div class="card">
+  <h2>C · The chime as a sound file</h2>
+  <div class="muted">Same notes, played the way a song or video plays.</div>
+  <button id="c">Play C</button>
+</div>
+<div class="card">
+  <h2>What this browser reports</h2>
+  <div id="info" class="muted"></div>
+</div>
+
+<script>
+(function () {
+  var info = document.getElementById('info'), log = [];
+  function session() { return navigator.audioSession || null; }
+  function show(line) {
+    if (line) log.push(line);
+    var s = session();
+    info.textContent = 'Media setting available: ' + (s ? 'yes' : 'no') + '\n' +
+      'Media setting now: ' + (s ? s.type : 'n/a') + '\n' +
+      (log.length ? 'Taps: ' + log.join(' · ') + '\n' : '') +
+      navigator.userAgent;
+  }
+  function setType(t) { var s = session(); if (!s) return false; try { s.type = t; return s.type === t; } catch (e) { return false; } }
+
+  // The app's chime: two short soft sine tones (880 Hz, then 1175 Hz).
+  var ctx = null;
+  function tones() {
+    var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return 'no tone generator';
+    ctx = ctx || new AC(); if (ctx.state === 'suspended') ctx.resume();
+    var t = ctx.currentTime;
+    [880, 1175].forEach(function (f, i) {
+      var o = ctx.createOscillator(), g = ctx.createGain(), st = t + i * 0.22;
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, st); g.gain.exponentialRampToValueAtTime(0.35, st + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, st + 0.6);
+      o.connect(g).connect(ctx.destination); o.start(st); o.stop(st + 0.65);
+    });
+    return 'played (' + ctx.state + ')';
+  }
+
+  // The same two tones rendered into a small WAV file.
+  function wavUrl() {
+    var rate = 22050, len = Math.floor(rate * 0.9), data = new Int16Array(len);
+    [880, 1175].forEach(function (f, i) {
+      var st = i * 0.22;
+      for (var n = 0; n < len; n++) {
+        var x = n / rate - st; if (x < 0 || x > 0.62) continue;
+        var env = x < 0.02 ? x / 0.02 : Math.exp(-(x - 0.02) * 9);
+        data[n] += Math.round(Math.sin(2 * Math.PI * f * x) * env * 0.35 * 32767 * 0.9);
+      }
+    });
+    var buf = new ArrayBuffer(44 + len * 2), v = new DataView(buf);
+    function str(o, s) { for (var k = 0; k < s.length; k++) v.setUint8(o + k, s.charCodeAt(k)); }
+    str(0, 'RIFF'); v.setUint32(4, 36 + len * 2, true); str(8, 'WAVE'); str(12, 'fmt '); v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true);
+    v.setUint16(32, 2, true); v.setUint16(34, 16, true); str(36, 'data'); v.setUint32(40, len * 2, true);
+    for (var n = 0; n < len; n++) v.setInt16(44 + n * 2, data[n], true);
+    return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+  }
+  var url = null;
+
+  document.getElementById('a').onclick = function () { setType('auto'); show('A ' + tones()); };
+  document.getElementById('b').onclick = function () { var ok = setType('playback'); show('B ' + (ok ? 'media on, ' : 'media setting refused, ') + tones()); };
+  document.getElementById('c').onclick = function () {
+    setType('auto'); url = url || wavUrl();
+    var el = new Audio(url);
+    el.play().then(function () { show('C played'); }, function (e) { show('C refused: ' + e.name); });
+  };
+  show();
+})();
+</script>
+</body>
+</html>
