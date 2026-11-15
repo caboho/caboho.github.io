@@ -28,7 +28,7 @@
 </head>
 <body>
 <h1>Sound test</h1>
-<p class="muted">Focus Flow test page (FF-84). 16 short tests: 4 phone setups × 4 ways to play the chime. Volume at about half. Nothing leaves this phone.</p>
+<p class="muted">Focus Flow test page (FF-84). 20 short tests: 4 phone setups × 5 ways to play the chime. Volume at about half. Nothing leaves this phone.</p>
 <div id="app"></div>
 <div class="card">
   <h2>Results so far</h2>
@@ -51,12 +51,14 @@
     { k: 'music', t: 'Silent switch OFF · music playing', music: true, todo: ['Turn the silent switch <b>off</b>.', 'Keep a song playing in Apple Music.'] }
   ];
   var METHODS = [
-    { k: 'A', t: 'The chime as it is today' },
-    { k: 'B', t: 'Marked as media' },
+    { k: 'A', t: 'The chime exactly as the app plays it today' },
+    { k: 'A+', t: 'As today, plus a silent blip inside the tap' },
+    { k: 'B', t: 'Marked as media, with the blip' },
     { k: 'C', t: 'As a sound file' },
-    { k: 'D', t: 'Marked as a short sound' }
+    { k: 'D', t: 'Marked as a short sound, with the blip' }
   ];
-  var KEY = 'ff-sound-test-v3', app = document.getElementById('app');
+  var N = METHODS.length, TOTAL = SETUPS.length * N;
+  var KEY = 'ff-sound-test-v4', app = document.getElementById('app');
   function load() { try { return JSON.parse(localStorage.getItem(KEY)) || { i: 0, ready: -1, res: {} }; } catch (e) { return { i: 0, ready: -1, res: {} }; } }
   var st = load();
   function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
@@ -105,6 +107,7 @@
     log.push('setting ' + setType(method === 'B' ? 'playback' : method === 'D' ? 'transient' : 'auto'));
     var AC = window.AudioContext || window.webkitAudioContext; if (!AC) { log.push('no tone generator'); done(log); return; }
     ctx = new AC(); log.push('tap: ' + ctx.state);
+    if (method !== 'A') { try { var src = ctx.createBufferSource(); src.buffer = ctx.createBuffer(1, 1, 22050); src.connect(ctx.destination); src.start(0); log.push('blip sent'); } catch (e) { log.push('blip failed'); } }
     try { ctx.resume().then(function () { log.push('tap resume ok: ' + ctx.state); }, function () { log.push('tap resume refused'); }); } catch (e) {}
     setTimeout(function () {
       log.push('chime: ' + ctx.state);
@@ -118,14 +121,14 @@
   function h(html) { app.innerHTML = '<div class="card">' + html + '</div>'; }
   function render() {
     grid();
-    if (st.i >= 16) { h('<h2>All 16 done</h2><div>Tap <b>Copy results</b> and paste them to Claude.</div>'); return; }
-    var si = Math.floor(st.i / 4), mi = st.i % 4, S = SETUPS[si], M = METHODS[mi];
+    if (st.i >= TOTAL) { h('<h2>All ' + TOTAL + ' done</h2><div>Tap <b>Copy results</b> and paste them to Claude.</div>'); return; }
+    var si = Math.floor(st.i / N), mi = st.i % N, S = SETUPS[si], M = METHODS[mi];
     if (st.ready !== si) {
-      h('<div class="muted">Setup ' + (si + 1) + ' of 4</div><div class="big">' + S.t + '</div><ul><li>' + S.todo.join('</li><li>') + '</li></ul><button id="go">Done, start these 4 tests</button>');
+      h('<div class="muted">Setup ' + (si + 1) + ' of 4</div><div class="big">' + S.t + '</div><ul><li>' + S.todo.join('</li><li>') + '</li></ul><button id="go">Done, start these 5 tests</button>');
       document.getElementById('go').onclick = function () { st.ready = si; save(); render(); };
       return;
     }
-    h('<div class="muted">Test ' + (st.i + 1) + ' of 16 · ' + S.t + '</div><div class="big">' + M.k + ' · ' + M.t + '</div>' +
+    h('<div class="muted">Test ' + (st.i + 1) + ' of ' + TOTAL + ' · ' + S.t + '</div><div class="big">' + M.k + ' · ' + M.t + '</div>' +
       (S.music ? '<div><b>Check the music is playing right now.</b> If the last test stopped it, start it again first.</div>' : '') +
       '<div class="muted">The chime comes 2 seconds after your tap.</div><button id="play">Play ' + M.k + '</button><div id="q"></div>');
     document.getElementById('play').onclick = function () {
@@ -168,7 +171,7 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(o.value).then(ok, function () { o.select(); document.execCommand('copy'); ok(); });
     else { o.select(); document.execCommand('copy'); ok(); }
   };
-  document.getElementById('back').onclick = function () { if (st.i > 0) { st.i--; st.ready = Math.floor(st.i / 4); save(); location.reload(); } };
+  document.getElementById('back').onclick = function () { if (st.i > 0) { st.i--; st.ready = Math.floor(st.i / N); save(); location.reload(); } };
   var armed = false;
   document.getElementById('reset').onclick = function () {
     if (!armed) { armed = true; this.textContent = 'Tap again to erase all results'; return; }
