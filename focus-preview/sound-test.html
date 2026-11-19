@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>pasario · Sound test</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 17px/1.45 -apple-system, system-ui, sans-serif; margin: 0; padding: 24px 18px 48px; max-width: 520px; margin-inline: auto; background: #fafafa; color: #171717; }
+  @media (prefers-color-scheme: dark) { body { background: #0a0a0a; color: #f5f5f5; } .card { background: #171717 !important; border-color: #2a2a2a !important; } .muted { color: #a3a3a3 !important; } td, th { border-color: #333 !important; } textarea { background: #111; color: #ddd; border-color: #333 !important; } .ghost { background: #262626 !important; color: #f5f5f5 !important; } }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  h2 { font-size: 19px; margin: 0 0 6px; }
+  .muted { color: #666; font-size: 15px; }
+  .card { background: #fff; border: 1px solid #e5e5e5; border-radius: 18px; padding: 16px; margin: 14px 0; }
+  .big { font-size: 21px; font-weight: 700; margin: 6px 0; }
+  button { font: inherit; font-weight: 600; width: 100%; min-height: 54px; border: 0; border-radius: 14px; background: #2563eb; color: #fff; margin-top: 10px; }
+  button:active { opacity: .7; }
+  .ghost { background: #e5e5e5; color: #171717; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .small { min-height: 40px; font-size: 14px; font-weight: 500; width: auto; padding: 0 14px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; margin-top: 8px; }
+  td, th { border: 1px solid #ddd; padding: 6px 4px; text-align: center; }
+  th:first-child, td:first-child { text-align: left; }
+  textarea { width: 100%; box-sizing: border-box; height: 150px; font: 12px/1.35 ui-monospace, monospace; border-radius: 10px; border: 1px solid #ddd; padding: 8px; margin-top: 10px; }
+  ul { padding-left: 20px; margin: 6px 0; }
+</style>
+</head>
+<body>
+<h1>Sound test</h1>
+<p class="muted">pasario test page (FF-84). 20 short tests: 4 phone setups × 5 ways to play the chime. Volume at about half. Nothing leaves this phone.</p>
+<div id="app"></div>
+<div class="card">
+  <h2>Results so far</h2>
+  <div class="muted">🔔 heard · 🔕 not heard · ♪ music kept playing · ⏹ music stopped</div>
+  <div id="grid"></div>
+  <textarea id="out" readonly></textarea>
+  <button id="copy" class="ghost">Copy results</button>
+  <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+    <button id="back" class="ghost small">Redo the previous test</button>
+    <button id="reset" class="ghost small">Start over</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var SETUPS = [
+    { k: 'quiet', t: 'Silent switch OFF · no music', todo: ['Turn the silent switch <b>off</b>.', 'Stop any music.'] },
+    { k: 'silent', t: 'Silent switch ON · no music', todo: ['Turn the silent switch <b>on</b>.', 'Keep music stopped.'] },
+    { k: 'silent+music', t: 'Silent switch ON · music playing', music: true, todo: ['Keep the silent switch <b>on</b>.', 'Start a song in Apple Music, then come back here.'] },
+    { k: 'music', t: 'Silent switch OFF · music playing', music: true, todo: ['Turn the silent switch <b>off</b>.', 'Keep a song playing in Apple Music.'] }
+  ];
+  var METHODS = [
+    { k: 'A', t: 'The chime exactly as the app plays it today' },
+    { k: 'A+', t: 'As today, plus a silent blip inside the tap' },
+    { k: 'B', t: 'Marked as media, with the blip' },
+    { k: 'C', t: 'As a sound file' },
+    { k: 'D', t: 'Marked as a short sound, with the blip' }
+  ];
+  var N = METHODS.length, TOTAL = SETUPS.length * N;
+  var KEY = 'ff-sound-test-v4', app = document.getElementById('app');
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)) || { i: 0, ready: -1, res: {} }; } catch (e) { return { i: 0, ready: -1, res: {} }; } }
+  var st = load();
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function session() { return navigator.audioSession || null; }
+  function setType(t) { var s = session(); if (!s) return 'no setting'; try { s.type = t; return s.type === t ? t : 'refused'; } catch (e) { return 'refused'; } }
+
+  // The chime: two soft sine tones (880 Hz, then 1175 Hz), with the slower fade.
+  var ctx = null;
+  function schedule() {
+    var t = ctx.currentTime;
+    [880, 1175].forEach(function (f, i) {
+      var o = ctx.createOscillator(), g = ctx.createGain(), s = t + i * 0.22;
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, s); g.gain.exponentialRampToValueAtTime(0.32, s + 0.02); g.gain.setTargetAtTime(0.0001, s + 0.02, 0.11);
+      o.connect(g).connect(ctx.destination); o.start(s); o.stop(s + 0.7);
+    });
+  }
+  function wav(silent) {
+    var rate = 22050, len = Math.floor(rate * (silent ? 0.15 : 0.9)), data = new Int16Array(len);
+    if (!silent) [880, 1175].forEach(function (f, i) {
+      var s = i * 0.22;
+      for (var n = 0; n < len; n++) { var x = n / rate - s; if (x < 0 || x > 0.66) continue; var env = x < 0.02 ? x / 0.02 : Math.exp(-(x - 0.02) / 0.11); data[n] += Math.round(Math.sin(2 * Math.PI * f * x) * env * 0.32 * 32767 * 0.9); }
+    });
+    var buf = new ArrayBuffer(44 + len * 2), v = new DataView(buf);
+    function str(o, s) { for (var k = 0; k < s.length; k++) v.setUint8(o + k, s.charCodeAt(k)); }
+    str(0, 'RIFF'); v.setUint32(4, 36 + len * 2, true); str(8, 'WAVE'); str(12, 'fmt '); v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true);
+    v.setUint16(32, 2, true); v.setUint16(34, 16, true); str(36, 'data'); v.setUint32(40, len * 2, true);
+    for (var n = 0; n < len; n++) v.setInt16(44 + n * 2, data[n], true);
+    return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+  }
+
+  // Like the app: sound is prepared inside the tap, and the chime comes 2 seconds later with no tap.
+  function run(method, done) {
+    var log = [];
+    if (method === 'C') {
+      log.push('setting ' + setType('auto'));
+      var el = new Audio(wav(true));
+      el.play().then(function () { log.push('tap: file unlocked'); }, function (e) { log.push('tap: unlock refused ' + e.name); });
+      setTimeout(function () {
+        el.src = wav(false);
+        el.play().then(function () { log.push('chime: file playing'); done(log); }, function (e) { log.push('chime: refused ' + e.name); done(log); });
+      }, 2000);
+      return;
+    }
+    log.push('setting ' + setType(method === 'B' ? 'playback' : method === 'D' ? 'transient' : 'auto'));
+    var AC = window.AudioContext || window.webkitAudioContext; if (!AC) { log.push('no tone generator'); done(log); return; }
+    ctx = new AC(); log.push('tap: ' + ctx.state);
+    if (method !== 'A') { try { var src = ctx.createBufferSource(); src.buffer = ctx.createBuffer(1, 1, 22050); src.connect(ctx.destination); src.start(0); log.push('blip sent'); } catch (e) { log.push('blip failed'); } }
+    try { ctx.resume().then(function () { log.push('tap resume ok: ' + ctx.state); }, function () { log.push('tap resume refused'); }); } catch (e) {}
+    setTimeout(function () {
+      log.push('chime: ' + ctx.state);
+      if (ctx.state === 'running') { schedule(); done(log); return; }
+      var fin = false, f = function (how) { if (fin) return; fin = true; log.push(how + ': ' + ctx.state); if (ctx.state === 'running') schedule(); done(log); };
+      try { ctx.resume().then(function () { f('late resume ok'); }, function () { f('late resume refused'); }); } catch (e) { f('late resume error'); }
+      setTimeout(function () { f('late resume no answer'); }, 1500);
+    }, 2000);
+  }
+
+  function h(html) { app.innerHTML = '<div class="card">' + html + '</div>'; }
+  function render() {
+    grid();
+    if (st.i >= TOTAL) { h('<h2>All ' + TOTAL + ' done</h2><div>Tap <b>Copy results</b> and paste them to Claude.</div>'); return; }
+    var si = Math.floor(st.i / N), mi = st.i % N, S = SETUPS[si], M = METHODS[mi];
+    if (st.ready !== si) {
+      h('<div class="muted">Setup ' + (si + 1) + ' of 4</div><div class="big">' + S.t + '</div><ul><li>' + S.todo.join('</li><li>') + '</li></ul><button id="go">Done, start these 5 tests</button>');
+      document.getElementById('go').onclick = function () { st.ready = si; save(); render(); };
+      return;
+    }
+    h('<div class="muted">Test ' + (st.i + 1) + ' of ' + TOTAL + ' · ' + S.t + '</div><div class="big">' + M.k + ' · ' + M.t + '</div>' +
+      (S.music ? '<div><b>Check the music is playing right now.</b> If the last test stopped it, start it again first.</div>' : '') +
+      '<div class="muted">The chime comes 2 seconds after your tap.</div><button id="play">Play ' + M.k + '</button><div id="q"></div>');
+    document.getElementById('play').onclick = function () {
+      var b = this; b.disabled = true; b.textContent = 'Chime in 2 seconds…'; b.style.opacity = .5;
+      run(M.k, function (log) {
+        setTimeout(function () {
+          b.textContent = 'Sent';
+          var ans = { log: log }, q = document.getElementById('q');
+          function ask(text, field, next) {
+            q.innerHTML = '<div style="margin-top:14px"><b>' + text + '</b></div><div class="row"><button id="y">Yes</button><button id="n" class="ghost">No</button></div>';
+            document.getElementById('y').onclick = function () { ans[field] = true; next(); };
+            document.getElementById('n').onclick = function () { ans[field] = false; next(); };
+          }
+          function finish() { st.res[S.k + '|' + M.k] = ans; st.i++; save(); location.reload(); }
+          ask('Did you hear the chime?', 'heard', function () { if (S.music) ask('Is the music still playing?', 'music', finish); else finish(); });
+        }, 1200);
+      });
+    };
+  }
+
+  function cell(r) { if (!r) return '·'; return (r.heard ? '🔔' : '🔕') + (r.music === undefined ? '' : r.music ? ' ♪' : ' ⏹'); }
+  function grid() {
+    var html = '<table><tr><th>Setup</th>' + METHODS.map(function (m) { return '<th>' + m.k + '</th>'; }).join('') + '</tr>';
+    var text = ['pasario sound test · ' + new Date().toISOString().slice(0, 16), 'Setting available: ' + (session() ? 'yes' : 'no'), ''];
+    SETUPS.forEach(function (S) {
+      html += '<tr><td>' + S.t.replace(' · ', '<br>') + '</td>' + METHODS.map(function (M) { return '<td>' + cell(st.res[S.k + '|' + M.k]) + '</td>'; }).join('') + '</tr>';
+      text.push(S.t);
+      METHODS.forEach(function (M) {
+        var r = st.res[S.k + '|' + M.k]; if (!r) { text.push('  ' + M.k + ': not done'); return; }
+        text.push('  ' + M.k + ': chime ' + (r.heard ? 'HEARD' : 'not heard') + (r.music === undefined ? '' : ', music ' + (r.music ? 'kept playing' : 'STOPPED')) + ' [' + r.log.join('; ') + ']');
+      });
+    });
+    text.push('', navigator.userAgent);
+    document.getElementById('grid').innerHTML = html + '</table>';
+    document.getElementById('out').value = text.join('\n');
+  }
+  document.getElementById('copy').onclick = function () {
+    var o = document.getElementById('out'), b = this;
+    function ok() { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy results'; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(o.value).then(ok, function () { o.select(); document.execCommand('copy'); ok(); });
+    else { o.select(); document.execCommand('copy'); ok(); }
+  };
+  document.getElementById('back').onclick = function () { if (st.i > 0) { st.i--; st.ready = Math.floor(st.i / N); save(); location.reload(); } };
+  var armed = false;
+  document.getElementById('reset').onclick = function () {
+    if (!armed) { armed = true; this.textContent = 'Tap again to erase all results'; return; }
+    try { localStorage.removeItem(KEY); } catch (e) {} location.reload();
+  };
+  render();
+})();
+</script>
+</body>
+</html>
