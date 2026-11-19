@@ -1,7 +1,7 @@
 {
   "name": "Focus Flow",
   "short_name": "Focus",
-  "description": "A timer for chained routines.",
+  "description": "Get through your routines, one calm step at a time.",
   "start_url": "/focus/",
   "scope": "/focus/",
   "display": "standalone",
