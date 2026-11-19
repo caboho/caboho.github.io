@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Focus Flow · Sound test</title>
+<title>pasario · Sound test</title>
 <style>
   :root { color-scheme: light dark; }
   body { font: 17px/1.45 -apple-system, system-ui, sans-serif; margin: 0; padding: 24px 18px 48px; max-width: 520px; margin-inline: auto; background: #fafafa; color: #171717; }
@@ -28,7 +28,7 @@
 </head>
 <body>
 <h1>Sound test</h1>
-<p class="muted">Focus Flow test page (FF-84). 20 short tests: 4 phone setups × 5 ways to play the chime. Volume at about half. Nothing leaves this phone.</p>
+<p class="muted">pasario test page (FF-84). 20 short tests: 4 phone setups × 5 ways to play the chime. Volume at about half. Nothing leaves this phone.</p>
 <div id="app"></div>
 <div class="card">
   <h2>Results so far</h2>
@@ -152,7 +152,7 @@
   function cell(r) { if (!r) return '·'; return (r.heard ? '🔔' : '🔕') + (r.music === undefined ? '' : r.music ? ' ♪' : ' ⏹'); }
   function grid() {
     var html = '<table><tr><th>Setup</th>' + METHODS.map(function (m) { return '<th>' + m.k + '</th>'; }).join('') + '</tr>';
-    var text = ['Focus Flow sound test · ' + new Date().toISOString().slice(0, 16), 'Setting available: ' + (session() ? 'yes' : 'no'), ''];
+    var text = ['pasario sound test · ' + new Date().toISOString().slice(0, 16), 'Setting available: ' + (session() ? 'yes' : 'no'), ''];
     SETUPS.forEach(function (S) {
       html += '<tr><td>' + S.t.replace(' · ', '<br>') + '</td>' + METHODS.map(function (M) { return '<td>' + cell(st.res[S.k + '|' + M.k]) + '</td>'; }).join('') + '</tr>';
       text.push(S.t);

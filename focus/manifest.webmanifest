@@ -1,6 +1,6 @@
 {
-  "name": "Focus Flow",
-  "short_name": "Focus",
+  "name": "pasario",
+  "short_name": "pasario",
   "description": "Get through your routines, one calm step at a time.",
   "start_url": "/focus/",
   "scope": "/focus/",

@@ -1,4 +1,4 @@
-// Offline cache for Focus Flow.
+// Offline cache for pasario.
 // Pages: network first (so updates show up), cached copy when offline.
 // Built files have content hashes in their names, so cache first is safe for them.
 const CACHE = 'ffc-v3';
