@@ -19,6 +19,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  // The published build's stamp is always read from the network, never kept: it is how a loaded app learns it is stale.
+  if (new URL(req.url).pathname.endsWith('/version.json')) return;
 
   if (req.mode === 'navigate') {
     event.respondWith(
